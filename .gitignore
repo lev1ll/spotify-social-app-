@@ -1,0 +1,16 @@
+# Ignorar archivos del entorno virtual de Python
+venv/
+.env
+
+# Ignorar archivos de caché de Python
+__pycache__/
+*.pyc
+
+# Ignorar la carpeta de paquetes de Node.js (puede ser GIGANTE)
+node_modules/
+
+# Ignorar archivos de build del frontend
+build/
+
+# Ignorar archivos de sistema operativo
+.DS_Store
