@@ -1,6 +1,6 @@
 import os
 import requests
-from flask import Flask, redirect, request, session, jsonify
+from flask import Flask, redirect, request, jsonify
 from dotenv import load_dotenv
 from urllib.parse import urlencode
 from flask_cors import CORS
@@ -17,8 +17,7 @@ TOKEN_URL = "https://accounts.spotify.com/api/token"
 API_BASE_URL = "https://api.spotify.com/v1/"
 
 app = Flask(__name__)
-CORS(app)
-app.secret_key = 'tu_clave_secreta_puede_ser_cualquier_cosa'
+CORS(app) # Ya no necesitamos credentials, pero CORS sigue siendo necesario
 
 @app.route('/login')
 def login():
@@ -43,15 +42,22 @@ def callback():
     }
     response = requests.post(TOKEN_URL, data=req_body)
     token_info = response.json()
-    session['access_token'] = token_info['access_token']
     
-    return redirect(f"{FRONTEND_URL}/dashboard")
+    access_token = token_info['access_token']
+
+    # ¡GRAN CAMBIO! Pasamos el token al frontend a través de la URL
+    return redirect(f"{FRONTEND_URL}/dashboard#token={access_token}")
 
 @app.route('/dashboard-data')
 def dashboard_data():
-    access_token = session.get('access_token')
+    # ¡GRAN CAMBIO! Leemos el token desde el encabezado de la petición
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'error': 'Authorization header faltante'}), 401
+    
+    access_token = auth_header.split(" ")[1]
     if not access_token:
-        return jsonify({'error': 'No autorizado'}), 401
+        return jsonify({'error': 'Token faltante'}), 401
 
     headers = {'Authorization': f'Bearer {access_token}'}
     params = {'time_range': 'long_term', 'limit': 10}
