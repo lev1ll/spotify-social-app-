@@ -1,9 +1,9 @@
 .tier-row {
   display: flex;
   margin: 5px 0;
-  min-height: 100px; /* Altura mínima para que la fila sea visible */
+  min-height: 80px;
   width: 100%;
-  max-width: 800px;
+  max-width: 900px;
 }
 
 .tier-label {
@@ -15,34 +15,25 @@
   font-size: 1.5rem;
   color: black;
   border: 2px solid black;
+  flex-shrink: 0;
 }
 
 .tier-content {
-  flex-grow: 1; /* Ocupa el resto del espacio */
+  flex-grow: 1;
   background-color: #404652;
   border: 2px solid black;
   border-left: none;
   padding: 10px;
-}
-
-/* --- Estilos para el cajón de canciones pendientes --- */
-.pending-tracks-container {
-  width: 100%;
-  max-width: 800px;
-  min-height: 120px;
-  background-color: #282c34;
-  border: 2px dashed #535a68;
-  border-radius: 8px;
-  margin-top: 20px;
-  padding: 10px;
-  text-align: center;
+  display: flex;
+  flex-wrap: wrap; /* Permite que los items pasen a la siguiente línea */
+  gap: 5px; /* Espacio entre items */
 }
 
 .track-item {
-  background-color: #404652;
+  background-color: #282c34;
   color: white;
   padding: 8px;
-  margin: 5px;
   border-radius: 4px;
-  display: inline-block; /* Para que se pongan uno al lado del otro */
+  display: inline-block;
+  cursor: grab; /* Indica que se puede arrastrar */
 }

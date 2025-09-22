@@ -1,52 +1,75 @@
-import React, { useState } from 'react'; // Solo necesitamos useState aquí
+import React, { useState } from 'react';
+import { DndContext } from '@dnd-kit/core';
 import AlbumSearch from '../components/AlbumSearch';
 import TierRow from '../components/TierRow';
+import DraggableTrack from '../components/DraggableTrack';
 
 const TierListPage = ({ token }) => {
-  // 1. Nuevo estado para guardar las canciones del álbum seleccionado
-  const [albumTracks, setAlbumTracks] = useState([]);
+  const [columns, setColumns] = useState({
+    pending: { name: 'Canciones Pendientes', items: [] },
+    S: { name: 'S', items: [], color: '#ff7f7f' },
+    A: { name: 'A', items: [], color: '#ffbf7f' },
+    B: { name: 'B', items: [], color: '#ffff7f' },
+    C: { name: 'C', items: [], color: '#7fff7f' },
+    D: { name: 'D', items: [], color: '#7fbfff' },
+  });
 
-  const tiers = [
-    { title: 'S', color: '#ff7f7f' },
-    { title: 'A', color: '#ffbf7f' },
-    { title: 'B', color: '#ffff7f' },
-    { title: 'C', color: '#7fff7f' },
-    { title: 'D', color: '#7fbfff' },
-  ];
-  
-  // 2. Nueva función que se ejecutará cuando un usuario haga clic en un álbum
   const handleAlbumSelect = async (albumId) => {
     const response = await fetch(`http://127.0.0.1:5000/album-tracks/${albumId}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
+      headers: { 'Authorization': `Bearer ${token}` }
     });
     const data = await response.json();
-    setAlbumTracks(data.items || []); // Guardamos las canciones en nuestro nuevo estado
+    setColumns(prev => ({ ...prev, pending: { ...prev.pending, items: data.items || [] } }));
   };
 
-  return (
-    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <h2>Creador de Tier Lists</h2>
-      {/* 3. Pasamos la nueva función como prop al buscador */}
-      <AlbumSearch token={token} onAlbumSelect={handleAlbumSelect} />
-      
-      {/* 4. "Cajón" para las canciones pendientes */}
-      <div className="pending-tracks-container">
-        <h3>Canciones Pendientes</h3>
-        {albumTracks.map(track => (
-          <div key={track.id} className="track-item">
-            {track.name}
-          </div>
-        ))}
-      </div>
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (!over) return; // Si se suelta fuera de una zona, no hacer nada
 
-      <div className="tier-list-container">
-        {tiers.map(tier => (
-          <TierRow key={tier.title} title={tier.title} color={tier.color} />
-        ))}
+    const activeContainer = findContainer(active.id);
+    const overContainer = over.id;
+
+    if (activeContainer && overContainer && activeContainer !== overContainer) {
+      setColumns(prev => {
+        const activeItems = [...prev[activeContainer].items];
+        const overItems = [...prev[overContainer].items];
+        
+        const [draggedItem] = activeItems.splice(activeItems.findIndex(item => item.id === active.id), 1);
+        overItems.push(draggedItem);
+
+        return {
+          ...prev,
+          [activeContainer]: { ...prev[activeContainer], items: activeItems },
+          [overContainer]: { ...prev[overContainer], items: overItems },
+        };
+      });
+    }
+  };
+  
+  const findContainer = (itemId) => {
+    return Object.keys(columns).find(key => columns[key].items.some(item => item.id === itemId));
+  };
+  
+  return (
+    <DndContext onDragEnd={handleDragEnd}>
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <h2>Creador de Tier Lists</h2>
+        <AlbumSearch token={token} onAlbumSelect={handleAlbumSelect} />
+        
+        {/* Cajón de Pendientes */}
+        <TierRow id="pending" title="Pendientes" color="#535a68">
+          {columns.pending.items.map(track => <DraggableTrack key={track.id} track={track} />)}
+        </TierRow>
+
+        <div className="tier-list-container">
+          {Object.entries(columns).filter(([id]) => id !== 'pending').map(([id, col]) => (
+            <TierRow key={id} id={id} title={col.name} color={col.color}>
+              {col.items.map(track => <DraggableTrack key={track.id} track={track} />)}
+            </TierRow>
+          ))}
+        </div>
       </div>
-    </div>
+    </DndContext>
   );
 };
 

@@ -1,14 +1,17 @@
 import React from 'react';
-import './TierRow.css'; // Crearemos este CSS
+import { useDroppable } from '@dnd-kit/core';
+import './TierRow.css';
 
-const TierRow = ({ title, color }) => {
+const TierRow = ({ id, title, color, children }) => {
+  const { setNodeRef } = useDroppable({ id });
+
   return (
-    <div className="tier-row">
+    <div className="tier-row" ref={setNodeRef}>
       <div className="tier-label" style={{ backgroundColor: color }}>
         {title}
       </div>
       <div className="tier-content">
-        {/* Aquí irán las canciones arrastradas */}
+        {children} {/* Aquí mostraremos las canciones arrastradas */}
       </div>
     </div>
   );
