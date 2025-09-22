@@ -31,3 +31,38 @@
 .search-button:hover {
   background-color: #1ed760;
 }
+
+/* --- Estilos para los resultados --- */
+.results-container {
+  margin-top: 20px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.album-result {
+  display: flex;
+  align-items: center;
+  background-color: #404652;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  text-align: left;
+  transition: background-color 0.2s;
+}
+
+.album-result:hover {
+  background-color: #535a68;
+  cursor: pointer; /* Indica que se puede hacer clic */
+}
+
+.album-result img {
+  width: 64px;
+  height: 64px;
+  border-radius: 4px;
+  margin-right: 15px;
+}
+
+.album-result p {
+  margin: 0;
+  font-weight: bold;
+}

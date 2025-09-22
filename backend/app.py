@@ -2,7 +2,7 @@ import os
 import requests
 from flask import Flask, redirect, request, jsonify
 from dotenv import load_dotenv
-from urllib.parse import urlencode
+from urllib.parse import urlencode, quote # Importamos 'quote'
 from flask_cors import CORS
 
 load_dotenv()
@@ -17,7 +17,7 @@ TOKEN_URL = "https://accounts.spotify.com/api/token"
 API_BASE_URL = "https://api.spotify.com/v1/"
 
 app = Flask(__name__)
-CORS(app) # Ya no necesitamos credentials, pero CORS sigue siendo necesario
+CORS(app)
 
 @app.route('/login')
 def login():
@@ -42,22 +42,14 @@ def callback():
     }
     response = requests.post(TOKEN_URL, data=req_body)
     token_info = response.json()
-    
     access_token = token_info['access_token']
-
-    # ¡GRAN CAMBIO! Pasamos el token al frontend a través de la URL
     return redirect(f"{FRONTEND_URL}/dashboard#token={access_token}")
 
 @app.route('/dashboard-data')
 def dashboard_data():
-    # ¡GRAN CAMBIO! Leemos el token desde el encabezado de la petición
     auth_header = request.headers.get('Authorization')
-    if not auth_header:
-        return jsonify({'error': 'Authorization header faltante'}), 401
-    
+    if not auth_header: return jsonify({'error': 'No autorizado'}), 401
     access_token = auth_header.split(" ")[1]
-    if not access_token:
-        return jsonify({'error': 'Token faltante'}), 401
 
     headers = {'Authorization': f'Bearer {access_token}'}
     params = {'time_range': 'long_term', 'limit': 10}
@@ -65,13 +57,38 @@ def dashboard_data():
     tracks_response = requests.get(f'{API_BASE_URL}me/top/tracks', headers=headers, params=params)
     artists_response = requests.get(f'{API_BASE_URL}me/top/artists', headers=headers, params=params)
     
-    tracks_data = tracks_response.json()
-    artists_data = artists_response.json()
-
     return jsonify({
-        'tracks': tracks_data.get('items', []),
-        'artists': artists_data.get('items', [])
+        'tracks': tracks_response.json().get('items', []),
+        'artists': artists_response.json().get('items', [])
     })
+
+# --- ¡NUEVA RUTA! ---
+@app.route('/search')
+def search():
+    # 1. Obtener el token de autorización del frontend
+    auth_header = request.headers.get('Authorization')
+    if not auth_header: return jsonify({'error': 'No autorizado'}), 401
+    access_token = auth_header.split(" ")[1]
+
+    # 2. Obtener el término de búsqueda de la URL (ej: /search?q=daft+punk)
+    query = request.args.get('q')
+    if not query:
+        return jsonify({'error': 'Falta el parámetro de búsqueda "q"'}), 400
+
+    # 3. Preparar y hacer la petición a la API de búsqueda de Spotify
+    headers = {'Authorization': f'Bearer {access_token}'}
+    
+    # Le decimos a Spotify que busque álbumes que contengan el 'query'
+    # Usamos 'quote' para asegurarnos de que el texto es seguro para una URL (ej: espacios -> %20)
+    search_url = f"{API_BASE_URL}search?q={quote(query)}&type=album&limit=10"
+    
+    response = requests.get(search_url, headers=headers)
+    
+    if response.status_code != 200:
+        return jsonify({'error': 'Error en la búsqueda de Spotify'}), response.status_code
+
+    # 4. Devolver los resultados en formato JSON
+    return jsonify(response.json())
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

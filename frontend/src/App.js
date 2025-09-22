@@ -30,7 +30,7 @@ function App() {
             <Navbar />
             <Routes>
               <Route path="/dashboard" element={<DashboardPage token={token} />} />
-              <Route path="/tierlist" element={<TierListPage />} />
+              <Route path="/tierlist" element={<TierListPage token={token}/>} />
             </Routes>
           </>
         ) : (
