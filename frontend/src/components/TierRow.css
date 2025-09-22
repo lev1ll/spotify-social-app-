@@ -1,0 +1,26 @@
+.tier-row {
+  display: flex;
+  margin: 5px 0;
+  min-height: 100px; /* Altura mínima para que la fila sea visible */
+  width: 100%;
+  max-width: 800px;
+}
+
+.tier-label {
+  width: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: black;
+  border: 2px solid black;
+}
+
+.tier-content {
+  flex-grow: 1; /* Ocupa el resto del espacio */
+  background-color: #404652;
+  border: 2px solid black;
+  border-left: none;
+  padding: 10px;
+}
