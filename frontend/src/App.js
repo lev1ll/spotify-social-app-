@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import ArtistsList from './components/ArtistsList'; // ¡Importamos nuestro nuevo componente!
+
+// Importamos ambos componentes
+import ArtistsList from './components/ArtistsList';
+import TracksList from './components/TracksList';
 
 function App() {
   const [token, setToken] = useState(null);
   const [artists, setArtists] = useState([]);
-  // Por ahora, quitaremos las canciones para simplificar
-  // const [tracks, setTracks] = useState([]); 
+  const [tracks, setTracks] = useState([]); // ¡Las canciones vuelven!
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -14,6 +16,8 @@ function App() {
 
     if (hash) {
       accessToken = hash.substring(1).split('&').find(elem => elem.startsWith('token=')).split('=')[1];
+      // Limpiamos el hash de la URL para que se vea más limpio
+      window.location.hash = '';
     }
 
     if (accessToken) {
@@ -30,7 +34,7 @@ function App() {
         const data = await response.json();
         
         setArtists(data.artists || []);
-        // setTracks(data.tracks || []);
+        setTracks(data.tracks || []);
       } catch (error) {
         console.error("Error al obtener los datos del backend:", error);
       }
@@ -48,8 +52,12 @@ function App() {
         <h1>Tu Dashboard de Spotify</h1>
         
         {token ? (
-          // ¡GRAN CAMBIO! Aquí usamos nuestro componente
-          <ArtistsList artists={artists} />
+          // Usamos un "Fragmento" (<>) para devolver dos componentes hermanos
+          <>
+            <TracksList tracks={tracks} />
+            <hr style={{ margin: '30px 0', width: '100%' }} />
+            <ArtistsList artists={artists} />
+          </>
         ) : (
           <a href="http://127.0.0.1:5000/login" className="login-button">
             Iniciar Sesión con Spotify
