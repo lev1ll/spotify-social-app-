@@ -8,17 +8,14 @@
   background-color: #282c34;
   transition: background-color 0.2s;
 }
-
 .track-row:hover {
   background-color: #404652;
 }
-
 .track-number {
   font-size: 0.9rem;
   color: #b3b3b3;
   width: 30px;
 }
-
 .track-name {
   font-size: 0.9rem;
   color: white;

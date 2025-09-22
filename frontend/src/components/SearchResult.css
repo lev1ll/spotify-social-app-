@@ -1,0 +1,39 @@
+.search-result-item {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  background-color: #282c34;
+  transition: background-color 0.2s;
+}
+
+.search-result-item:hover {
+  background-color: #404652;
+}
+
+.search-result-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.search-result-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.search-result-name {
+  margin: 0;
+  font-weight: bold;
+  color: white;
+}
+
+.search-result-artist {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #b3b3b3;
+}

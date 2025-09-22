@@ -1,11 +1,10 @@
 import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
-import TrackRow from './TrackRow'; // ¡Usamos el nuevo componente!
+import TrackRow from './TrackRow';
 import './TracksBank.css';
 
 const TracksBank = ({ id, tracks }) => {
   const { setNodeRef } = useDroppable({ id });
-
   return (
     <div className="tracks-bank-container">
       <h3>Banco de Canciones</h3>
@@ -17,5 +16,4 @@ const TracksBank = ({ id, tracks }) => {
     </div>
   );
 };
-
 export default TracksBank;

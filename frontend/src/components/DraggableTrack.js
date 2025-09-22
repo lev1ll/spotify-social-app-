@@ -2,40 +2,24 @@ import React from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import './DraggableTrack.css';
 
-// Ahora recibe 'album' como una nueva prop
-const DraggableTrack = ({ track, album }) => {
+const DraggableTrack = ({ track, isOverlay = false }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: track.id,
-    data: { track, album }, // Podemos pasar ambos datos
+    data: { track },
   });
 
   const style = transform ? {
     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-    zIndex: 1000,
   } : undefined;
 
-  // Usamos el 'album' que recibimos para encontrar la imagen
-  const imageUrl = album?.images[0]?.url;
+  // Si es el clon que se arrastra (overlay), no necesita los listeners
+  const eventHandlers = isOverlay ? {} : listeners;
 
   return (
-    <div 
-      ref={setNodeRef} 
-      style={style} 
-      {...listeners} 
-      {...attributes}
-      className="track-card"
-    >
-      {imageUrl && (
-        <img 
-          src={imageUrl} 
-          alt={track.name} 
-          className="track-card-image"
-          draggable="false" 
-        />
-      )}
+    <div ref={setNodeRef} style={style} {...attributes} {...eventHandlers} className="track-card">
+      <img src={track.album?.images[0]?.url} alt={track.name} className="track-card-image" draggable="false" />
       <span className="track-card-name">{track.name}</span>
     </div>
   );
 };
-
 export default DraggableTrack;

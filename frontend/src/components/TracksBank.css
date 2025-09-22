@@ -1,17 +1,15 @@
 .tracks-bank-container {
   width: 100%;
-  max-width: 900px;
   margin-top: 20px;
 }
-
 .tracks-bank-list {
   background-color: #1f2229;
   border: 1px solid #535a68;
   border-radius: 8px;
   padding: 10px;
-  height: 250px; /* Un poco más de altura */
+  max-height: 400px;
   overflow-y: auto;
   display: flex;
-  flex-direction: column; /* ¡Diseño de columna! */
+  flex-direction: column;
   gap: 5px;
 }
