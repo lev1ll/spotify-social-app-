@@ -1,27 +1,23 @@
 import React from 'react';
+import './Lists.css'; // ¡Importamos el nuevo CSS!
 
 const ArtistsList = ({ artists }) => {
   return (
     <div>
-      <h2>Tus 10 Artistas Favoritos</h2>
-      <ol>
+      <h2>Tus Artistas Favoritos</h2>
+      <ol className="list-container">
         {artists.map(artist => (
-          <li key={artist.id}>
-            {/* Mostramos la primera imagen del artista si existe */}
+          <li key={artist.id} className="list-item">
             {artist.images && artist.images[0] && (
-              <img 
-                src={artist.images[0].url} 
-                alt={artist.name} 
-                width="50" 
-                height="50" 
-              />
+              <img src={artist.images[0].url} alt={artist.name} />
             )}
-            <strong>{artist.name}</strong>
+            <div className="list-item-info">
+              <strong>{artist.name}</strong>
+            </div>
           </li>
         ))}
       </ol>
     </div>
   );
 };
-
 export default ArtistsList;

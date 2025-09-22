@@ -1,27 +1,18 @@
 import React from 'react';
+import './Lists.css'; // ¡Importamos el nuevo CSS!
 
 const TracksList = ({ tracks }) => {
   return (
     <div>
-      <h2>Tus 10 Canciones Favoritas</h2>
-      <ol>
+      <h2>Tus Canciones Favoritas</h2>
+      <ol className="list-container">
         {tracks.map(track => (
-          <li key={track.id} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-            
-            {/* Las canciones tienen la imagen dentro de track.album.images */}
+          <li key={track.id} className="list-item">
             {track.album.images && track.album.images[0] && (
-              <img 
-                src={track.album.images[0].url} 
-                alt={`Carátula del álbum ${track.album.name}`} 
-                width="50" 
-                height="50"
-                style={{ marginRight: '10px' }}
-              />
+              <img src={track.album.images[0].url} alt={`Carátula de ${track.album.name}`} />
             )}
-            
-            <div>
+            <div className="list-item-info">
               <strong>{track.name}</strong>
-              <br />
               <small>{track.artists[0].name}</small>
             </div>
           </li>
@@ -30,5 +21,4 @@ const TracksList = ({ tracks }) => {
     </div>
   );
 };
-
 export default TracksList;
