@@ -24,3 +24,25 @@
   border-left: none;
   padding: 10px;
 }
+
+/* --- Estilos para el cajón de canciones pendientes --- */
+.pending-tracks-container {
+  width: 100%;
+  max-width: 800px;
+  min-height: 120px;
+  background-color: #282c34;
+  border: 2px dashed #535a68;
+  border-radius: 8px;
+  margin-top: 20px;
+  padding: 10px;
+  text-align: center;
+}
+
+.track-item {
+  background-color: #404652;
+  color: white;
+  padding: 8px;
+  margin: 5px;
+  border-radius: 4px;
+  display: inline-block; /* Para que se pongan uno al lado del otro */
+}
