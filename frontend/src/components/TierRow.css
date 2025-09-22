@@ -4,6 +4,8 @@
   min-height: 80px;
   width: 100%;
   max-width: 900px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .tier-label {
@@ -26,7 +28,7 @@
   padding: 10px;
   display: flex;
   flex-wrap: wrap; /* Permite que los items pasen a la siguiente línea */
-  gap: 5px; /* Espacio entre items */
+  gap: 10px; /* Espacio entre items */
 }
 
 .track-item {

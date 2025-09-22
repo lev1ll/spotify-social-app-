@@ -1,0 +1,50 @@
+.tierlist-page-container {
+  width: 100%;
+  padding: 20px;
+}
+
+.tierlist-main-content {
+  display: flex;
+  flex-direction: row;
+  gap: 20px; /* Espacio entre las columnas */
+  margin-top: 20px;
+}
+
+/* Columna Izquierda para el Banco y Búsqueda */
+.left-column {
+  width: 350px;
+  flex-shrink: 0; /* Evita que la columna se encoja */
+  background-color: #191414;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+/* Columna Derecha para las Filas */
+.right-column {
+  flex-grow: 1; /* Ocupa el resto del espacio */
+}
+
+.selected-albums-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.album-cover {
+  width: 60px;
+  height: 60px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.album-cover:hover {
+  transform: scale(1.05);
+}
+
+.album-cover.active {
+  border-color: #1DB954;
+}

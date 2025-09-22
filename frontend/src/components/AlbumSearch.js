@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import './AlbumSearch.css';
 
-// 1. Ahora recibe 'onAlbumSelect' como una nueva prop
 const AlbumSearch = ({ token, onAlbumSelect }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
 
   const handleSearch = async () => {
-    // ... (la lógica de búsqueda se mantiene igual)
     if (!searchTerm) return;
     const response = await fetch(`http://127.0.0.1:5000/search?q=${searchTerm}`, {
       headers: { 'Authorization': `Bearer ${token}` }
@@ -24,6 +22,13 @@ const AlbumSearch = ({ token, onAlbumSelect }) => {
     setResults(Object.values(uniqueAlbums));
   };
 
+  // ¡NUEVA FUNCIÓN!
+  const handleSelect = (album) => {
+    onAlbumSelect(album); // 1. Llama a la función del padre para añadir el álbum
+    setResults([]);       // 2. ¡MAGIA! Vacía los resultados de búsqueda
+    setSearchTerm('');    // 3. Opcional: limpia la barra de búsqueda
+  };
+
   return (
     <div>
       <div className="search-container">
@@ -38,15 +43,18 @@ const AlbumSearch = ({ token, onAlbumSelect }) => {
         <button className="search-button" onClick={handleSearch}>Buscar</button>
       </div>
 
-      <div className="results-container">
-        {results.map(album => (
-          // 2. Al hacer clic, llamamos a la función que nos pasó el padre
-          <div key={album.id} className="album-result" onClick={() => onAlbumSelect(album.id)}>
-            <img src={album.images[0]?.url} alt={album.name} />
-            <p>{album.name} - {album.artists[0].name}</p>
-          </div>
-        ))}
-      </div>
+      {/* Solo mostramos los resultados si hay alguno */}
+      {results.length > 0 && (
+        <div className="results-container">
+          {results.map(album => (
+            // El onClick ahora llama a nuestra nueva función handleSelect
+            <div key={album.id} className="album-result" onClick={() => handleSelect(album)}>
+              <img src={album.images[0]?.url} alt={album.name} />
+              <p>{album.name} - {album.artists[0].name}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

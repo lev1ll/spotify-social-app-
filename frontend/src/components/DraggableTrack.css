@@ -1,0 +1,32 @@
+.track-card {
+  display: flex;
+  flex-direction: column; /* Apila la imagen y el texto verticalmente */
+  align-items: center;
+  justify-content: center;
+  background-color: #282c34;
+  border-radius: 8px;
+  padding: 5px;
+  width: 100px; /* Ancho fijo para cada tarjeta */
+  height: 120px; /* Alto fijo para cada tarjeta */
+  cursor: grab;
+  text-align: center;
+  border: 1px solid #535a68;
+}
+
+.track-card-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover; /* Asegura que la imagen cubra el espacio sin deformarse */
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.track-card-name {
+  font-size: 0.75rem;
+  color: white;
+  /* Evita que el texto se salga de la tarjeta */
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
